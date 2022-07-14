@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webPage version="6">
+  <properties sub="21" tra="5011">
+    <title>KARDEX FONDOS DE RESERVA</title>
+  </properties>
+  <containers>
+    <container cssClass="criterios">
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Division"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1CDivision" w="120" x="2">
+        <assistant class="com.fitbank.webpages.assistants.ListOfValues">
+          <references>
+            <item alias="tjuridicodivisiones1"
+              class="com.fitbank.webpages.data.Reference" table="TJURIDICODIVISIONES"/>
+          </references>
+          <fields>
+            <item alias="tjuridicodivisiones1" autoQuery="true"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc1CDivision" field="CODIGODIVISION"
+              title="Codigo" type="RECORD"/>
+            <item alias="tjuridicodivisiones1" autoQuery="true"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc1DDivision" field="NOMBRE"
+              title="Descripcion" type="RECORD"/>
+          </fields>
+        </assistant>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1DDivision" w="0" x="3">
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Departamento" y="2"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1CDepartamento" w="120" x="2">
+        <assistant class="com.fitbank.webpages.assistants.ListOfValues">
+          <references>
+            <item alias="tjuridicodepartamentos1"
+              class="com.fitbank.webpages.data.Reference" table="TJURIDICODEPARTAMENTOS"/>
+          </references>
+          <fields>
+            <item alias="tjuridicodepartamentos1" autoQuery="true"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc1CDepartamento" field="CODIGODEPARTAMENTO"
+              title="Codigo" type="RECORD"/>
+            <item alias="tjuridicodepartamentos1"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc1DDepartamento" field="NOMBRE"
+              title="Descripcion" type="RECORD"/>
+            <item alias="tjuridicodepartamentos1"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc1CDivision" field="CODIGODIVISION"
+              type="CRITERION" visible="false"/>
+          </fields>
+        </assistant>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1DDepartamento" w="0" x="3">
+        <attribute nom="mod">0</attribute>
+      </widget>
+    </container>
+    <container cssClass="criterios">
+      <widget class="com.fitbank.webpages.widgets.Button" w="100">
+        <attribute nom="dat">Mostrar</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.Report" name="21_KARDEXFONDOSRESERVA.pdf"/>
+        </behaviors>
+      </widget>
+    </container>
+    <container cssClass="criterios" visible="0">
+      <widget class="com.fitbank.webpages.widgets.Input" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CUSUARIO" type="REPORT"/>
+        <attribute nom="val">=$user</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CSUBSISTEMA" type="REPORT"/>
+        <attribute nom="val">=$subsystem</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CTRANSACCION" type="REPORT"/>
+        <attribute nom="val">=$transaction</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2CDivision" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CDIVISION" type="REPORT"/>
+        <attribute nom="val">='%'+fnc1CDivision+'%'</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2CDepartamento" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CDEPARTAMENTO" type="REPORT"/>
+        <attribute nom="val">='%'+fnc1CDepartamento+'%'</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc3FActual" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="FACTUAL" type="REPORT"/>
+        <attribute nom="val">=NOW()</attribute>
+      </widget>
+    </container>
+  </containers>
+</webPage>

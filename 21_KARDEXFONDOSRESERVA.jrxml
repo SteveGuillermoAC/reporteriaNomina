@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2022-07-14T12:53:26 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="21_KARDEXFONDOSRESERVA" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="763a35c0-0e6c-4549-add7-93ab448fb2c9">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="OracleAdapter"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="362"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="627"/>
+	<import value="com.fitbank.reports.SubReportCall"/>
+	<parameter name="CIA" class="java.lang.String"/>
+	<parameter name="FHASTA" class="java.sql.Timestamp"/>
+	<parameter name="FITBANK_HEADER_LOGO" class="java.lang.String"/>
+	<parameter name="CUSUARIO" class="java.lang.String"/>
+	<parameter name="CSUBSISTEMA" class="java.lang.String"/>
+	<parameter name="CTRANSACCION" class="java.lang.String"/>
+	<parameter name="FACTUAL" class="java.util.Date"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/diego/fitbank/reportes/21/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CDIVISION" class="java.lang.String"/>
+	<parameter name="CDEPARTAMENTO" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+  t2.CPERSONA,
+  di.codigodivision,
+  di.nombre DIVISION,
+  de.codigodepartamento,
+  de.nombre DEPARTAMENTO,
+  p.nombrelegal,
+    t2.enero,
+    t2.febrero,
+    t2.marzo,
+    t2.abril,
+    t2.mayo,
+    t2.junio,
+    t2.julio,
+    t2.agosto,
+    t2.septiembre,
+    t2.octubre,
+    t2.noviembre,
+    t2.DICIEMBRE
+FROM
+    (
+SELECT
+            cpersona,
+            SUM(
+                CASE trim(H.mes)
+                    WHEN 'Enero'
+                    THEN TO_CHAR(h.PROVISIONFR)
+                    ELSE '0'
+                END) Enero,
+            SUM(
+                CASE trim(H.mes)
+                    WHEN 'Febrero'
+                    THEN TO_CHAR(h.PROVISIONFR)
+                    ELSE '0'
+                END) Febrero,
+            SUM(
+                CASE trim(H.mes)
+                    WHEN 'Marzo'
+                    THEN TO_CHAR(h.PROVISIONFR)
+                    ELSE '0'
+                END) Marzo,
+            SUM(
+                CASE trim(H.mes)
+                    WHEN 'Abril'
+                    THEN TO_CHAR(h.PROVISIONFR)
+                    ELSE '0'
+                END) Abril,
+            SUM(
+                CASE trim(H.mes)
+                    WHEN 'Mayo'
+                    THEN TO_CHAR(h.PROVISIONFR)
+                    ELSE '0'
+                END) Mayo,
+            SUM(
+                CASE trim(H.mes)
+                    WHEN 'Junio'
+                    THEN TO_CHAR(h.PROVISIONFR)
+                    ELSE '0'
+                END) Junio,
+            SUM(
+                CASE trim(H.mes)
+                    WHEN 'Julio'
+                    THEN TO_CHAR(h.PROVISIONFR)
+                    ELSE '0'
+                END) Julio,
+            SUM(
+                CASE trim(H.mes)
+                    WHEN 'Agosto'
+                    THEN TO_CHAR(h.PROVISIONFR)
+                    ELSE '0'
+                END) Agosto,
+            SUM(
+                CASE trim(H.mes)
+                    WHEN 'Septiembre'
+                    THEN TO_CHAR(h.PROVISIONFR)
+                    ELSE '0'
+                END) Septiembre,
+            SUM(
+                CASE trim(H.mes)
+                    WHEN 'Octubre'
+                    THEN TO_CHAR(h.PROVISIONFR)
+                    ELSE '0'
+                END) Octubre,
+            SUM(
+                CASE trim(H.mes)
+                    WHEN 'Noviembre'
+                    THEN TO_CHAR(h.PROVISIONFR)
+                    ELSE '0'
+                END) Noviembre,
+            SUM(
+                CASE trim(H.mes)
+                    WHEN 'Diciembre'
+                    THEN TO_CHAR(h.PROVISIONFR)
+                    ELSE '0'
+                END) Diciembre
+        FROM
+            (
+                SELECT
+                    h.*,
+                    TO_CHAR(to_date(h.FECHAROL),'Month') mes
+                FROM
+                    tnominahistoricofijos h
+                WHERE
+                    fhasta=$P{FHASTA} 
+                
+                AND to_number(to_char(to_date(FECHAROL),'yyyy'))=to_number(to_char(to_date( $P{FACTUAL}  ),'yyyy')))h
+        GROUP BY
+            cpersona)t2,
+    tnaturaltrabajo n,
+    tpersona p,
+    tjuridicodivisiones di,
+    tjuridicodepartamentos de
+WHERE
+   t2.cpersona=n.cpersona  
+   AND n.fhasta=$P{FHASTA} 
+   AND p.fhasta= $P{FHASTA} 
+   AND di.codigodivision=n.codigodivision
+   AND n.codigodivision=de.codigodivision
+   AND n.fhasta=di.fhasta
+   AND n.fhasta=de.fhasta
+   AND t2.cpersona=p.cpersona 
+   AND n.codigodivision like $P{CDIVISION}
+   AND n.codigodepartamento like  $P{CDEPARTAMENTO}
+   order by p.nombrelegal]]>
+	</queryString>
+	<field name="CPERSONA" class="java.math.BigDecimal"/>
+	<field name="CODIGODIVISION" class="java.lang.String"/>
+	<field name="DIVISION" class="java.lang.String"/>
+	<field name="CODIGODEPARTAMENTO" class="java.lang.String"/>
+	<field name="DEPARTAMENTO" class="java.lang.String"/>
+	<field name="NOMBRELEGAL" class="java.lang.String"/>
+	<field name="ENERO" class="java.math.BigDecimal"/>
+	<field name="FEBRERO" class="java.math.BigDecimal"/>
+	<field name="MARZO" class="java.math.BigDecimal"/>
+	<field name="ABRIL" class="java.math.BigDecimal"/>
+	<field name="MAYO" class="java.math.BigDecimal"/>
+	<field name="JUNIO" class="java.math.BigDecimal"/>
+	<field name="JULIO" class="java.math.BigDecimal"/>
+	<field name="AGOSTO" class="java.math.BigDecimal"/>
+	<field name="SEPTIEMBRE" class="java.math.BigDecimal"/>
+	<field name="OCTUBRE" class="java.math.BigDecimal"/>
+	<field name="NOVIEMBRE" class="java.math.BigDecimal"/>
+	<field name="DICIEMBRE" class="java.math.BigDecimal"/>
+	<group name="DIVISION">
+		<groupExpression><![CDATA[$F{CODIGODIVISION}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<staticText>
+					<reportElement x="32" y="0" width="50" height="15" uuid="34a704e1-97f8-4aba-bcd5-826c6f3cb7fc"/>
+					<box>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Division]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="100" y="0" width="236" height="15" uuid="4d0a8fda-688b-4d73-87d0-0548ed188865"/>
+					<textFieldExpression><![CDATA[$F{DIVISION}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="DEPARTAMENTO">
+		<groupExpression><![CDATA[$F{CODIGODEPARTAMENTO}]]></groupExpression>
+		<groupHeader>
+			<band height="40">
+				<staticText>
+					<reportElement x="2" y="0" width="80" height="15" uuid="335958cb-3c6c-4aab-9d89-4815eaf3419d"/>
+					<box>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Departamento]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="536" y="25" width="50" height="15" uuid="07ee9fc2-9367-49c4-a39a-5a04002da408"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Agosto]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="636" y="25" width="56" height="15" uuid="155af573-0854-476c-b6ea-27b2befb2935"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Octubre]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="586" y="25" width="50" height="15" uuid="3a8802b3-0ca2-4bb8-ae27-d15213c8b2f2"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Septiembre]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="336" y="25" width="50" height="15" uuid="3f9ae5e0-5972-4c31-ba28-694e997213ed"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Abril]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="692" y="25" width="55" height="15" uuid="cde98e67-5e6e-441a-9b43-1ececf36a7b0"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Noviembre]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="25" width="186" height="15" uuid="b138adaf-28b8-437f-bb16-fe6b80e4684a"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Empleado]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="747" y="25" width="55" height="15" uuid="b4ecec2e-53bd-4937-a3f9-95680becb052"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Diciembre]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="186" y="25" width="50" height="15" uuid="306b57b8-ba7e-43b2-ae82-cdf527932200"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Enero]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="286" y="25" width="50" height="15" uuid="b382f924-3be3-40e2-b30c-fd81599a1724"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Marzo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="386" y="25" width="50" height="15" uuid="20740dcc-b8fa-4bbe-8ac3-29aa57499a55"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Mayo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="236" y="25" width="50" height="15" uuid="e8980a83-b305-4135-a65a-dac816020272"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Febrero]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="486" y="25" width="50" height="15" uuid="94d80786-8e84-4f06-b221-b608f72c9ef2"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Julio]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="436" y="25" width="50" height="15" uuid="c0f5ae9b-efa7-42ef-8bf7-e58cb1c7acd7"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Junio]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="100" y="0" width="236" height="15" uuid="fbf0edbf-f81e-4f87-92bd-509d7fc8eb10"/>
+					<textFieldExpression><![CDATA[$F{DEPARTAMENTO}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="100" splitType="Stretch">
+			<subreport>
+				<reportElement x="138" y="0" width="555" height="100" uuid="bf3572aa-675e-41f3-b493-084528c1e1f3"/>
+				<subreportParameter name="NAME">
+					<subreportParameterExpression><![CDATA["KARDEX FONDOS DE RESERVA"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CUSUARIO">
+					<subreportParameterExpression><![CDATA[$P{CUSUARIO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CIA">
+					<subreportParameterExpression><![CDATA[$P{CIA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="FITBANK_HEADER_LOGO">
+					<subreportParameterExpression><![CDATA[$P{FITBANK_HEADER_LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="FHASTA">
+					<subreportParameterExpression><![CDATA[$P{FHASTA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CTRANSACCION">
+					<subreportParameterExpression><![CDATA[$P{CTRANSACCION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CSUBSISTEMA">
+					<subreportParameterExpression><![CDATA[$P{CSUBSISTEMA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="FECHAROL">
+					<subreportParameterExpression><![CDATA[$P{FHASTA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[SubReportCall.getReport($P{REPORT_CONNECTION},"21_HEADER")]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="24" splitType="Stretch">
+			<textField>
+				<reportElement x="692" y="0" width="55" height="15" uuid="64c33d66-c807-4681-8766-bd9d064dd84c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NOVIEMBRE}.toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="536" y="0" width="50" height="15" uuid="55efa883-4246-4101-aebf-e4b0e58f2741"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{AGOSTO}.toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="51" y="0" width="135" height="15" uuid="870be23c-c2b6-4625-83cf-58e8efa03bb2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NOMBRELEGAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="336" y="0" width="50" height="15" uuid="5cab148b-4567-465c-b770-3b4f0c00cc0f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ABRIL}.toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="636" y="0" width="56" height="15" uuid="317f0ea6-5ebb-4ec0-92c4-9196654c0962"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{OCTUBRE}.toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="286" y="0" width="50" height="15" uuid="ca5a669c-81a1-4395-a234-4f09b62da9cc"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{MARZO}.toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="236" y="0" width="50" height="15" uuid="6402e981-87a6-4804-a1e4-206bfe8bd21c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{FEBRERO}.toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="436" y="0" width="50" height="15" uuid="ee7ba10d-acf0-4a39-8de2-92eb229cbe49"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{JUNIO}.toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="186" y="0" width="50" height="15" uuid="974f0e16-3d06-4802-a6d3-7c2df597d223"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ENERO}.toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="747" y="0" width="55" height="15" uuid="310470be-c593-45d7-a2e3-9a9dd20cdedf"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DICIEMBRE}.toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="386" y="0" width="50" height="15" uuid="509261bb-42d1-433f-8393-5e6b30dd4b2d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{MAYO}.toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="51" height="15" uuid="d30126b8-2fb7-416d-9eb6-11791a8da898"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CPERSONA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="586" y="0" width="50" height="15" uuid="280fd6c5-7891-4373-86e6-162ad0839fd5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{SEPTIEMBRE}.toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="486" y="0" width="50" height="15" uuid="395ee3bf-939f-4ab4-bb66-9146315cf2b6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{JULIO}.toString()]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
